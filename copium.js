@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-//
 require('dotenv').config();
 
 const client = new Discord.Client();
@@ -33,8 +32,6 @@ client.on('message', msg => {
             ret = fetch(url)
                 .then(res => res.json())
                 .then(json=> {msg.channel.send(json[0].q);});
-            //console.log(ret)
-            //msg.channel.send(ret)
         }
 
     }
@@ -63,10 +60,6 @@ client.on('message', msg => {
     }
 
 
-    //}
-    // if(msg.author.username === "vsoltan123") {
-    //     msg.react('😡');
-    //     msg.reply("i lov u");
 });
 
 
