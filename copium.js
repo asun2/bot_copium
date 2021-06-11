@@ -53,7 +53,7 @@ client.on('message', async msg => {
                 const reaction = collected.first();
                 if (reaction.emoji.name === '👍') {
                     message.channel.send('Upload a .png file of the emote you want to create');
-                    //turns out discord does not allow bots to upload custom emojis to the server, so this will have to change functionally
+                    //turns out I cannot find a way to allow bots to upload custom emotes to the server, so this will have to change functionally
                 }
                 else {
                     message.delete();
@@ -85,7 +85,6 @@ client.on('message', async msg => {
 
 async function execute(message, serverQueue) {
     const args = message.content.split(" ");
-    console.log(args);
     const voiceChannel = message.member.voice.channel;
     if (!voiceChannel){
         return message.channel.send(
@@ -97,6 +96,14 @@ async function execute(message, serverQueue) {
       return message.channel.send(
         "I need the permissions to join and speak in your voice channel!"
       );
+    }
+
+    if (args[0] == '!stop') {
+        return stop(message, serverQueue);
+    }
+
+    if (args[0] == '!skip') {
+        return skip(message, serverQueue);
     }
     
     const songInfo = await ytdl.getInfo(args[1]);
@@ -119,8 +126,7 @@ async function execute(message, serverQueue) {
         queue.set(message.guild.id, queueContruct);
 
         queueContruct.songs.push(song);
-
-
+        
         try {
             var connection = await voiceChannel.join();
             queueContruct.connection = connection;
@@ -132,9 +138,9 @@ async function execute(message, serverQueue) {
         }
     } else {
         serverQueue.songs.push(song);
-        return message.channel.send(`${song.title} has been added to the queue!`);
+        return message.channel.send(`**${song.title}** has been added to the queue!`);
     }      
-}
+
 
 function skip(message, serverQueue) {
     if (!message.member.voice.channel)
@@ -145,8 +151,11 @@ function skip(message, serverQueue) {
       return message.channel.send("There is no song that I could skip!");
     serverQueue.connection.dispatcher.end();
 }
-  
+ 
+
+
 function stop(message, serverQueue) {
+    console.log(message)
     if (!message.member.voice.channel)
       return message.channel.send("You have to be in a voice channel to stop the music!");
       
@@ -174,7 +183,5 @@ function play(guild, song) {
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
     serverQueue.textChannel.send(`Start playing: **${song.title}**`);
 }
-
-//https://zenquotes.io/api/random/beb2efdfc8bbecfb32f687be29893ecb95737a6f
-
+}
 client.login(bot_token);
