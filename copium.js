@@ -120,7 +120,13 @@ async function execute(message, serverQueue) {
       };
     } 
     else {
-      return message.channel.send("Search feature has not been implemented");
+      const {videos} = await yt_search(args.slice(1).join(" "));
+      if (!videos.length) return message.channel.send("Songs not found.");
+      console.log(videos);
+      song = {
+        title: videos[0].title,
+        url: videos[0].url
+      };
     }
     
 
@@ -151,7 +157,7 @@ async function execute(message, serverQueue) {
         }
     } else {
         serverQueue.songs.push(song);
-        return message.channel.send(`**${song.title}** has been added to the queue!`);
+        return message.channel.send(`**${song.title}** - ${song.url} has been added to the queue!`);
     }      
 
 
@@ -172,7 +178,7 @@ async function execute(message, serverQueue) {
         return message.channel.send("You have to be in a voice channel to stop the music!");
         
       if (!serverQueue)
-        return message.channel.send("There is no song that I could stop!");
+        return message.channel.send("No song is playing right now.");
         
       serverQueue.songs = [];
       serverQueue.connection.dispatcher.end();
@@ -193,7 +199,7 @@ async function execute(message, serverQueue) {
         })
         .on("error", error => console.error(error));
       dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-      serverQueue.textChannel.send(`Start playing: **${song.title}**`);
+      serverQueue.textChannel.send(`Now playing: **${song.title}** - ${song.url}`);
   }
 }
 
