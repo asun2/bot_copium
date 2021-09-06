@@ -1,7 +1,9 @@
 # bot_copium
-cope harder
 
-### dependencies required:
+A fun side project I created over the summer that provides features to a discord server.
+
+### node modules required:
 - discord.js
-- fetch
-- ytdl
+- ytdl-core
+- yt-search
+- node-fetch
